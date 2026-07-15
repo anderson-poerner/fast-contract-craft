@@ -77,14 +77,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "ContratoRápido — Contratos profissionais em segundos" },
+      {
+        name: "description",
+        content:
+          "SaaS para autônomos e microempresas gerarem contratos de prestação de serviços prontos para assinar.",
+      },
+      { property: "og:title", content: "ContratoRápido" },
+      {
+        property: "og:description",
+        content: "Contratos de prestação de serviços profissionais em minutos.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
