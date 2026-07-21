@@ -11,10 +11,10 @@ export const Route = createFileRoute("/")({
         content:
           "Plataforma SaaS para profissionais autônomos e microempresas gerarem contratos de prestação de serviços profissionais em minutos.",
       },
-      { property: "og:title", content: "ContratoRápido" },
+      { property: "og:title", content: "ContratoRápido — Gere contratos em segundos" },
       {
         property: "og:description",
-        content: "Contratos de prestação de serviços profissionais em minutos.",
+        content: "Plataforma SaaS para profissionais autônomos e microempresas gerarem contratos de prestação de serviços profissionais em minutos.",
       },
     ],
   }),
