@@ -14,7 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      contracts: {
+        Row: {
+          created_at: string
+          form_data: Json
+          id: string
+          signed_at: string | null
+          signer_cpf: string | null
+          signer_ip: string | null
+          signer_name: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          form_data: Json
+          id?: string
+          signed_at?: string | null
+          signer_cpf?: string | null
+          signer_ip?: string | null
+          signer_name?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          form_data?: Json
+          id?: string
+          signed_at?: string | null
+          signer_cpf?: string | null
+          signer_ip?: string | null
+          signer_name?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
