@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import jsPDF from "jspdf";
 import {
@@ -14,6 +14,8 @@ import {
   Save,
   Copy,
   Check,
+  Building2,
+  Pencil,
 } from "lucide-react";
 import {
   CONTRACT_LABELS,
