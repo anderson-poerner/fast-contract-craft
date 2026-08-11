@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import jsPDF from "jspdf";
 import {
@@ -14,6 +14,8 @@ import {
   Save,
   Copy,
   Check,
+  Building2,
+  Pencil,
 } from "lucide-react";
 import {
   CONTRACT_LABELS,
@@ -50,6 +52,36 @@ function Dashboard() {
   const updateAndReset = <K extends keyof FormState>(k: K, v: FormState[K]) => {
     setSavedId(null);
     update(k, v);
+  };
+
+  // "Minha Empresa" — dados do contratado salvos no navegador
+  const [empresa, setEmpresa] = useState({ nome: "", doc: "" });
+  const [editingEmpresa, setEditingEmpresa] = useState(false);
+  const [empresaSalva, setEmpresaSalva] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("contratorapido:minha-empresa");
+      if (raw) {
+        const parsed = JSON.parse(raw) as { nome?: string; doc?: string };
+        const dados = { nome: parsed.nome ?? "", doc: parsed.doc ?? "" };
+        setEmpresa(dados);
+        setForm((f) => ({ ...f, contratadoNome: dados.nome, contratadoDoc: dados.doc }));
+      } else {
+        setEditingEmpresa(true);
+      }
+    } catch {
+      setEditingEmpresa(true);
+    }
+  }, []);
+
+  const salvarEmpresa = () => {
+    localStorage.setItem("contratorapido:minha-empresa", JSON.stringify(empresa));
+    setForm((f) => ({ ...f, contratadoNome: empresa.nome, contratadoDoc: empresa.doc }));
+    setSavedId(null);
+    setEditingEmpresa(false);
+    setEmpresaSalva(true);
+    setTimeout(() => setEmpresaSalva(false), 2000);
   };
 
   const shareUrl = savedId ? `${typeof window !== "undefined" ? window.location.origin : ""}/view/contract/${savedId}` : "";
@@ -182,10 +214,63 @@ function Dashboard() {
               <Field label="CPF / CNPJ" value={form.contratanteDoc} onChange={(v) => updateAndReset("contratanteDoc", v)} placeholder="000.000.000-00" />
             </FieldGroup>
 
-            <FieldGroup title="Contratado (Prestador)">
-              <Field label="Nome / Razão Social" value={form.contratadoNome} onChange={(v) => updateAndReset("contratadoNome", v)} placeholder="Seu nome ou empresa" />
-              <Field label="CPF / CNPJ" value={form.contratadoDoc} onChange={(v) => updateAndReset("contratadoDoc", v)} placeholder="000.000.000-00" />
-            </FieldGroup>
+            <div className="rounded-lg border bg-muted/40 p-4 space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                  <Building2 className="h-3.5 w-3.5" />
+                  Minha Empresa
+                </p>
+                {!editingEmpresa && (
+                  <button
+                    onClick={() => setEditingEmpresa(true)}
+                    className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border bg-card hover:bg-muted transition text-xs font-medium"
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                    Alterar
+                  </button>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Estes dados identificam você como CONTRATADO em todos os contratos gerados.
+              </p>
+
+              {editingEmpresa ? (
+                <>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <Field
+                      label="Nome / Razão Social"
+                      value={empresa.nome}
+                      onChange={(v) => setEmpresa((e) => ({ ...e, nome: v }))}
+                      placeholder="Seu nome ou empresa"
+                    />
+                    <Field
+                      label="CPF / CNPJ"
+                      value={empresa.doc}
+                      onChange={(v) => setEmpresa((e) => ({ ...e, doc: v }))}
+                      placeholder="000.000.000-00"
+                    />
+                  </div>
+                  <button
+                    onClick={salvarEmpresa}
+                    className="inline-flex items-center gap-2 h-9 px-3 rounded-md bg-brand text-brand-foreground hover:opacity-90 transition text-xs font-medium"
+                  >
+                    <Save className="h-3.5 w-3.5" />
+                    Salvar dados
+                  </button>
+                </>
+              ) : (
+                <div className="text-sm">
+                  <p className="font-medium">{empresa.nome || "—"}</p>
+                  <p className="text-muted-foreground text-xs">{empresa.doc || "CPF/CNPJ não informado"}</p>
+                </div>
+              )}
+
+              {empresaSalva && (
+                <p className="text-xs text-green-600 inline-flex items-center gap-1.5">
+                  <Check className="h-3.5 w-3.5" /> Dados salvos!
+                </p>
+              )}
+            </div>
 
             <div className="space-y-1.5">
               <label className="text-sm font-medium">Descrição do serviço</label>
