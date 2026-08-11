@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ContratosRouteImport } from './routes/contratos'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ViewContractIdRouteImport } from './routes/view.contract.$id'
 
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContratosRoute = ContratosRouteImport.update({
+  id: '/contratos',
+  path: '/contratos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -31,30 +37,34 @@ const ViewContractIdRoute = ViewContractIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contratos': typeof ContratosRoute
   '/dashboard': typeof DashboardRoute
   '/view/contract/$id': typeof ViewContractIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contratos': typeof ContratosRoute
   '/dashboard': typeof DashboardRoute
   '/view/contract/$id': typeof ViewContractIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contratos': typeof ContratosRoute
   '/dashboard': typeof DashboardRoute
   '/view/contract/$id': typeof ViewContractIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/view/contract/$id'
+  fullPaths: '/' | '/contratos' | '/dashboard' | '/view/contract/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/view/contract/$id'
-  id: '__root__' | '/' | '/dashboard' | '/view/contract/$id'
+  to: '/' | '/contratos' | '/dashboard' | '/view/contract/$id'
+  id: '__root__' | '/' | '/contratos' | '/dashboard' | '/view/contract/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContratosRoute: typeof ContratosRoute
   DashboardRoute: typeof DashboardRoute
   ViewContractIdRoute: typeof ViewContractIdRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contratos': {
+      id: '/contratos'
+      path: '/contratos'
+      fullPath: '/contratos'
+      preLoaderRoute: typeof ContratosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContratosRoute: ContratosRoute,
   DashboardRoute: DashboardRoute,
   ViewContractIdRoute: ViewContractIdRoute,
 }

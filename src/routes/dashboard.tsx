@@ -24,7 +24,8 @@ import {
   type ContractType,
   type FormState,
 } from "@/lib/contract-builder";
-import { createContract } from "@/lib/contracts.functions";
+import { createContract, getContractsByIds } from "@/lib/contracts.functions";
+import { listLocalContracts, saveLocalContract, getSeenSignatures } from "@/lib/my-contracts";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
