@@ -195,9 +195,15 @@ function Dashboard() {
         <nav className="flex-1 p-3 space-y-1 text-sm">
           <SidebarItem icon={<LayoutDashboard className="h-4 w-4" />} label="Painel" active />
           <SidebarItem icon={<FilePlus2 className="h-4 w-4" />} label="Novo Contrato" />
-          <SidebarItem icon={<FileText className="h-4 w-4" />} label="Meus Contratos" />
+          <SidebarItem
+            icon={<FileText className="h-4 w-4" />}
+            label="Meus Contratos"
+            to="/contratos"
+            badge={novasAssinaturas}
+          />
           <SidebarItem icon={<Settings className="h-4 w-4" />} label="Configurações" />
         </nav>
+
         <div className="p-3 border-t border-sidebar-border">
           <div className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-sidebar-accent transition">
             <div className="h-9 w-9 rounded-full bg-brand grid place-items-center text-brand-foreground font-semibold">
