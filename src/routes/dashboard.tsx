@@ -437,18 +437,45 @@ function Dashboard() {
   );
 }
 
-function SidebarItem({ icon, label, active }: { icon: React.ReactNode; label: string; active?: boolean }) {
-  return (
-    <button
-      className={`w-full flex items-center gap-3 px-3 py-2 rounded-md transition text-left ${
-        active ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-      }`}
-    >
+function SidebarItem({
+  icon,
+  label,
+  active,
+  to,
+  badge,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  active?: boolean;
+  to?: string;
+  badge?: number;
+}) {
+  const cls = `w-full flex items-center gap-3 px-3 py-2 rounded-md transition text-left ${
+    active
+      ? "bg-sidebar-accent text-sidebar-accent-foreground"
+      : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+  }`;
+  const content = (
+    <>
       {icon}
-      <span>{label}</span>
-    </button>
+      <span className="flex-1">{label}</span>
+      {!!badge && (
+        <span className="h-5 min-w-5 px-1.5 rounded-full bg-green-600 text-white text-[11px] font-semibold grid place-items-center">
+          {badge}
+        </span>
+      )}
+    </>
   );
+  if (to) {
+    return (
+      <Link to={to} className={cls}>
+        {content}
+      </Link>
+    );
+  }
+  return <button className={cls}>{content}</button>;
 }
+
 
 function FieldGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (
