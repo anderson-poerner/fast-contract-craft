@@ -119,6 +119,12 @@ function Dashboard() {
     try {
       const res = await create({ data: { form } });
       setSavedId(res.id);
+      saveLocalContract({
+        id: res.id,
+        titulo: contract.title,
+        cliente: form.contratanteNome,
+        criadoEm: new Date().toISOString(),
+      });
       return res.id as string;
     } catch (e) {
       alert("Erro ao salvar contrato: " + (e as Error).message);
