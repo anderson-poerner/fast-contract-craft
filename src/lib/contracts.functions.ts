@@ -40,6 +40,21 @@ export const getContract = createServerFn({ method: "GET" })
     return row;
   });
 
+export const getContractsByIds = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) =>
+    z.object({ ids: z.array(z.string().uuid()).max(200) }).parse(input),
+  )
+  .handler(async ({ data }) => {
+    if (data.ids.length === 0) return [];
+    const { data: rows, error } = await supabase
+      .from("contracts")
+      .select("id, form_data, status, signer_name, signer_cpf, signer_ip, signed_at, created_at")
+      .in("id", data.ids)
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
 export const signContract = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) =>
     z

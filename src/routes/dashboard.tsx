@@ -24,7 +24,8 @@ import {
   type ContractType,
   type FormState,
 } from "@/lib/contract-builder";
-import { createContract } from "@/lib/contracts.functions";
+import { createContract, getContractsByIds } from "@/lib/contracts.functions";
+import { listLocalContracts, saveLocalContract, getSeenSignatures } from "@/lib/my-contracts";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -42,8 +43,34 @@ function Dashboard() {
   const [savedId, setSavedId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [novasAssinaturas, setNovasAssinaturas] = useState(0);
   const create = useServerFn(createContract);
+  const fetchContracts = useServerFn(getContractsByIds);
   const contract = useMemo(() => buildContract(form), [form]);
+
+  // Verifica periodicamente se algum contrato enviado já foi assinado pelo cliente
+  useEffect(() => {
+    let active = true;
+    const check = async () => {
+      const ids = listLocalContracts().map((c) => c.id);
+      if (ids.length === 0) return;
+      try {
+        const rows = (await fetchContracts({ data: { ids } })) as { id: string; status: string }[];
+        if (!active) return;
+        const seen = getSeenSignatures();
+        setNovasAssinaturas(rows.filter((r) => r.status === "signed" && !seen.includes(r.id)).length);
+      } catch {
+        /* silencioso */
+      }
+    };
+    check();
+    const t = setInterval(check, 20000);
+    return () => {
+      active = false;
+      clearInterval(t);
+    };
+  }, [fetchContracts]);
+
 
   const update = <K extends keyof FormState>(k: K, v: FormState[K]) =>
     setForm((f) => ({ ...f, [k]: v, ...(k === "tipo" ? {} : {}) }));
@@ -92,6 +119,12 @@ function Dashboard() {
     try {
       const res = await create({ data: { form } });
       setSavedId(res.id);
+      saveLocalContract({
+        id: res.id,
+        titulo: contract.title,
+        cliente: form.contratanteNome,
+        criadoEm: new Date().toISOString(),
+      });
       return res.id as string;
     } catch (e) {
       alert("Erro ao salvar contrato: " + (e as Error).message);
@@ -162,9 +195,15 @@ function Dashboard() {
         <nav className="flex-1 p-3 space-y-1 text-sm">
           <SidebarItem icon={<LayoutDashboard className="h-4 w-4" />} label="Painel" active />
           <SidebarItem icon={<FilePlus2 className="h-4 w-4" />} label="Novo Contrato" />
-          <SidebarItem icon={<FileText className="h-4 w-4" />} label="Meus Contratos" />
+          <SidebarItem
+            icon={<FileText className="h-4 w-4" />}
+            label="Meus Contratos"
+            to="/contratos"
+            badge={novasAssinaturas}
+          />
           <SidebarItem icon={<Settings className="h-4 w-4" />} label="Configurações" />
         </nav>
+
         <div className="p-3 border-t border-sidebar-border">
           <div className="flex items-center gap-3 px-2 py-2 rounded-md hover:bg-sidebar-accent transition">
             <div className="h-9 w-9 rounded-full bg-brand grid place-items-center text-brand-foreground font-semibold">
@@ -182,14 +221,28 @@ function Dashboard() {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 border-b bg-card px-6 flex items-center justify-between">
+        <header className="h-16 border-b bg-card px-6 flex items-center justify-between gap-4">
           <div>
             <h1 className="text-lg font-semibold">Novo Contrato</h1>
             <p className="text-xs text-muted-foreground">
               Preencha os dados e visualize o contrato em tempo real.
             </p>
           </div>
+          <Link
+            to="/contratos"
+            className={`inline-flex items-center gap-2 h-9 px-3 rounded-md border text-xs font-medium transition ${
+              novasAssinaturas
+                ? "border-green-600/40 bg-green-50 text-green-700 hover:bg-green-100"
+                : "bg-card hover:bg-muted"
+            }`}
+          >
+            <FileText className="h-3.5 w-3.5" />
+            {novasAssinaturas
+              ? `${novasAssinaturas} ${novasAssinaturas === 1 ? "contrato assinado" : "contratos assinados"}`
+              : "Meus Contratos"}
+          </Link>
         </header>
+
 
         <div className="flex-1 grid lg:grid-cols-2 gap-6 p-6 overflow-auto">
           <section className="bg-card border rounded-xl p-6 space-y-5 h-fit">
@@ -398,18 +451,45 @@ function Dashboard() {
   );
 }
 
-function SidebarItem({ icon, label, active }: { icon: React.ReactNode; label: string; active?: boolean }) {
-  return (
-    <button
-      className={`w-full flex items-center gap-3 px-3 py-2 rounded-md transition text-left ${
-        active ? "bg-sidebar-accent text-sidebar-accent-foreground" : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-      }`}
-    >
+function SidebarItem({
+  icon,
+  label,
+  active,
+  to,
+  badge,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  active?: boolean;
+  to?: string;
+  badge?: number;
+}) {
+  const cls = `w-full flex items-center gap-3 px-3 py-2 rounded-md transition text-left ${
+    active
+      ? "bg-sidebar-accent text-sidebar-accent-foreground"
+      : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+  }`;
+  const content = (
+    <>
       {icon}
-      <span>{label}</span>
-    </button>
+      <span className="flex-1">{label}</span>
+      {!!badge && (
+        <span className="h-5 min-w-5 px-1.5 rounded-full bg-green-600 text-white text-[11px] font-semibold grid place-items-center">
+          {badge}
+        </span>
+      )}
+    </>
   );
+  if (to) {
+    return (
+      <Link to={to} className={cls}>
+        {content}
+      </Link>
+    );
+  }
+  return <button className={cls}>{content}</button>;
 }
+
 
 function FieldGroup({ title, children }: { title: string; children: React.ReactNode }) {
   return (

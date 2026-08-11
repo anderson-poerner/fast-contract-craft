@@ -50,7 +50,7 @@ function ViewContract() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const form = row.form_data as FormState;
+  const form = row.form_data as unknown as FormState;
   const built = buildContract(form);
   const isSigned = row.status === "signed";
 
