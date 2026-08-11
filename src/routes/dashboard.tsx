@@ -43,8 +43,34 @@ function Dashboard() {
   const [savedId, setSavedId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [novasAssinaturas, setNovasAssinaturas] = useState(0);
   const create = useServerFn(createContract);
+  const fetchContracts = useServerFn(getContractsByIds);
   const contract = useMemo(() => buildContract(form), [form]);
+
+  // Verifica periodicamente se algum contrato enviado já foi assinado pelo cliente
+  useEffect(() => {
+    let active = true;
+    const check = async () => {
+      const ids = listLocalContracts().map((c) => c.id);
+      if (ids.length === 0) return;
+      try {
+        const rows = (await fetchContracts({ data: { ids } })) as { id: string; status: string }[];
+        if (!active) return;
+        const seen = getSeenSignatures();
+        setNovasAssinaturas(rows.filter((r) => r.status === "signed" && !seen.includes(r.id)).length);
+      } catch {
+        /* silencioso */
+      }
+    };
+    check();
+    const t = setInterval(check, 20000);
+    return () => {
+      active = false;
+      clearInterval(t);
+    };
+  }, [fetchContracts]);
+
 
   const update = <K extends keyof FormState>(k: K, v: FormState[K]) =>
     setForm((f) => ({ ...f, [k]: v, ...(k === "tipo" ? {} : {}) }));
