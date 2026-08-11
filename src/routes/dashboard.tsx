@@ -221,14 +221,28 @@ function Dashboard() {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 border-b bg-card px-6 flex items-center justify-between">
+        <header className="h-16 border-b bg-card px-6 flex items-center justify-between gap-4">
           <div>
             <h1 className="text-lg font-semibold">Novo Contrato</h1>
             <p className="text-xs text-muted-foreground">
               Preencha os dados e visualize o contrato em tempo real.
             </p>
           </div>
+          <Link
+            to="/contratos"
+            className={`inline-flex items-center gap-2 h-9 px-3 rounded-md border text-xs font-medium transition ${
+              novasAssinaturas
+                ? "border-green-600/40 bg-green-50 text-green-700 hover:bg-green-100"
+                : "bg-card hover:bg-muted"
+            }`}
+          >
+            <FileText className="h-3.5 w-3.5" />
+            {novasAssinaturas
+              ? `${novasAssinaturas} ${novasAssinaturas === 1 ? "contrato assinado" : "contratos assinados"}`
+              : "Meus Contratos"}
+          </Link>
         </header>
+
 
         <div className="flex-1 grid lg:grid-cols-2 gap-6 p-6 overflow-auto">
           <section className="bg-card border rounded-xl p-6 space-y-5 h-fit">
