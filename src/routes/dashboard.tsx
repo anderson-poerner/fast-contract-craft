@@ -214,10 +214,63 @@ function Dashboard() {
               <Field label="CPF / CNPJ" value={form.contratanteDoc} onChange={(v) => updateAndReset("contratanteDoc", v)} placeholder="000.000.000-00" />
             </FieldGroup>
 
-            <FieldGroup title="Contratado (Prestador)">
-              <Field label="Nome / Razão Social" value={form.contratadoNome} onChange={(v) => updateAndReset("contratadoNome", v)} placeholder="Seu nome ou empresa" />
-              <Field label="CPF / CNPJ" value={form.contratadoDoc} onChange={(v) => updateAndReset("contratadoDoc", v)} placeholder="000.000.000-00" />
-            </FieldGroup>
+            <div className="rounded-lg border bg-muted/40 p-4 space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-2">
+                  <Building2 className="h-3.5 w-3.5" />
+                  Minha Empresa
+                </p>
+                {!editingEmpresa && (
+                  <button
+                    onClick={() => setEditingEmpresa(true)}
+                    className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border bg-card hover:bg-muted transition text-xs font-medium"
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                    Alterar
+                  </button>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Estes dados identificam você como CONTRATADO em todos os contratos gerados.
+              </p>
+
+              {editingEmpresa ? (
+                <>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <Field
+                      label="Nome / Razão Social"
+                      value={empresa.nome}
+                      onChange={(v) => setEmpresa((e) => ({ ...e, nome: v }))}
+                      placeholder="Seu nome ou empresa"
+                    />
+                    <Field
+                      label="CPF / CNPJ"
+                      value={empresa.doc}
+                      onChange={(v) => setEmpresa((e) => ({ ...e, doc: v }))}
+                      placeholder="000.000.000-00"
+                    />
+                  </div>
+                  <button
+                    onClick={salvarEmpresa}
+                    className="inline-flex items-center gap-2 h-9 px-3 rounded-md bg-brand text-brand-foreground hover:opacity-90 transition text-xs font-medium"
+                  >
+                    <Save className="h-3.5 w-3.5" />
+                    Salvar dados
+                  </button>
+                </>
+              ) : (
+                <div className="text-sm">
+                  <p className="font-medium">{empresa.nome || "—"}</p>
+                  <p className="text-muted-foreground text-xs">{empresa.doc || "CPF/CNPJ não informado"}</p>
+                </div>
+              )}
+
+              {empresaSalva && (
+                <p className="text-xs text-green-600 inline-flex items-center gap-1.5">
+                  <Check className="h-3.5 w-3.5" /> Dados salvos!
+                </p>
+              )}
+            </div>
 
             <div className="space-y-1.5">
               <label className="text-sm font-medium">Descrição do serviço</label>
