@@ -54,6 +54,36 @@ function Dashboard() {
     update(k, v);
   };
 
+  // "Minha Empresa" — dados do contratado salvos no navegador
+  const [empresa, setEmpresa] = useState({ nome: "", doc: "" });
+  const [editingEmpresa, setEditingEmpresa] = useState(false);
+  const [empresaSalva, setEmpresaSalva] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("contratorapido:minha-empresa");
+      if (raw) {
+        const parsed = JSON.parse(raw) as { nome?: string; doc?: string };
+        const dados = { nome: parsed.nome ?? "", doc: parsed.doc ?? "" };
+        setEmpresa(dados);
+        setForm((f) => ({ ...f, contratadoNome: dados.nome, contratadoDoc: dados.doc }));
+      } else {
+        setEditingEmpresa(true);
+      }
+    } catch {
+      setEditingEmpresa(true);
+    }
+  }, []);
+
+  const salvarEmpresa = () => {
+    localStorage.setItem("contratorapido:minha-empresa", JSON.stringify(empresa));
+    setForm((f) => ({ ...f, contratadoNome: empresa.nome, contratadoDoc: empresa.doc }));
+    setSavedId(null);
+    setEditingEmpresa(false);
+    setEmpresaSalva(true);
+    setTimeout(() => setEmpresaSalva(false), 2000);
+  };
+
   const shareUrl = savedId ? `${typeof window !== "undefined" ? window.location.origin : ""}/view/contract/${savedId}` : "";
 
   const saveAndGetLink = async () => {
