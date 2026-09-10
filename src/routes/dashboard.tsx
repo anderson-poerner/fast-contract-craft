@@ -29,7 +29,17 @@ import { createContract, getContractsByIds } from "@/lib/contracts.functions";
 import { listLocalContracts, saveLocalContract, getSeenSignatures } from "@/lib/my-contracts";
 import { loadCompanyProfile } from "@/lib/app-preferences";
 import { Button } from "@/components/ui/button";
-import MetricCard from "@/components/MetricCard";
+function MetricCard({ label, title, value, icon }: any) {
+  return (
+    <div className="p-4 rounded-lg border bg-card text-card-foreground shadow-sm flex items-center justify-between">
+      <div>
+        <p className="text-xs font-medium text-muted-foreground">{label || title}</p>
+        <p className="text-2xl font-bold">{value}</p>
+      </div>
+      <div className="h-8 w-8 text-muted-foreground">{icon}</div>
+    </div>
+  );
+}
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
