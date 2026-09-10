@@ -39,6 +39,12 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-surface: var(--surface);
+  --color-status-pending: var(--status-pending);
+  --color-status-pending-foreground: var(--status-pending-foreground);
+  --color-status-signed: var(--status-signed);
+  --color-status-signed-foreground: var(--status-signed-foreground);
+  --color-status-draft: var(--status-draft);
+  --color-status-draft-foreground: var(--status-draft-foreground);
 }
 
 :root {
@@ -73,6 +79,12 @@
   --sidebar-accent-foreground: oklch(0.98 0 0);
   --sidebar-border: oklch(0.30 0.04 260);
   --sidebar-ring: oklch(0.55 0.16 255);
+  --status-pending: oklch(0.93 0.08 90);
+  --status-pending-foreground: oklch(0.42 0.11 65);
+  --status-signed: oklch(0.92 0.08 150);
+  --status-signed-foreground: oklch(0.38 0.12 150);
+  --status-draft: oklch(0.92 0.008 260);
+  --status-draft-foreground: oklch(0.42 0.02 260);
 }
 
 .dark {
@@ -94,6 +106,12 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.55 0.16 255);
+  --status-pending: oklch(0.32 0.07 75);
+  --status-pending-foreground: oklch(0.86 0.12 88);
+  --status-signed: oklch(0.30 0.07 150);
+  --status-signed-foreground: oklch(0.84 0.12 150);
+  --status-draft: oklch(0.29 0.02 260);
+  --status-draft-foreground: oklch(0.75 0.02 260);
 }
 
 @layer base {

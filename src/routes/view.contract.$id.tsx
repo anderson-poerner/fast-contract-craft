@@ -8,8 +8,12 @@ import { getContract, signContract } from "@/lib/contracts.functions";
 export const Route = createFileRoute("/view/contract/$id")({
   head: () => ({
     meta: [
-      { title: "Visualizar contrato — ContratoRápido" },
+      { title: "Visualizar contrato — ZapDocfy" },
       { name: "description", content: "Leia e assine seu contrato eletronicamente." },
+      { property: "og:title", content: "Contrato para assinatura — ZapDocfy" },
+      { property: "og:description", content: "Leia e assine seu contrato eletronicamente." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -92,7 +96,7 @@ function ViewContract() {
           <div className="h-8 w-8 rounded-md bg-brand grid place-items-center">
             <FileSignature className="h-4 w-4 text-brand-foreground" />
           </div>
-          <span className="font-semibold">ContratoRápido</span>
+          <span className="font-semibold">ZapDocfy</span>
         </div>
       </header>
 

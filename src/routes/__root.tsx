@@ -77,23 +77,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ContratoRápido — Gere contratos em segundos" },
+      { title: "ZapDocfy — Contratos rápidos e profissionais" },
       {
         name: "description",
         content:
           "Plataforma SaaS para profissionais autônomos e microempresas gerarem contratos de prestação de serviços profissionais em minutos.",
       },
-      { property: "og:title", content: "ContratoRápido — Gere contratos em segundos" },
+      { property: "og:title", content: "ZapDocfy — Contratos rápidos e profissionais" },
       {
         property: "og:description",
         content: "Plataforma SaaS para profissionais autônomos e microempresas gerarem contratos de prestação de serviços profissionais em minutos.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "ContratoRápido — Gere contratos em segundos" },
+      { name: "twitter:title", content: "ZapDocfy — Contratos rápidos e profissionais" },
       { name: "twitter:description", content: "Plataforma SaaS para profissionais autônomos e microempresas gerarem contratos de prestação de serviços profissionais em minutos." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0728e858-d663-4c61-99fe-94fa9d180c4a/id-preview-38546560--691bda3f-4aeb-4402-b063-4aa22a8908a9.lovable.app-1784672483963.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/0728e858-d663-4c61-99fe-94fa9d180c4a/id-preview-38546560--691bda3f-4aeb-4402-b063-4aa22a8908a9.lovable.app-1784672483963.png" },
     ],
     links: [
       {
@@ -111,7 +109,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>
@@ -125,6 +123,11 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    const dark = localStorage.getItem("zapdocfy:tema") === "dark";
+    document.documentElement.classList.toggle("dark", dark);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
