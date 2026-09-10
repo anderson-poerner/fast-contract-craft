@@ -1,7 +1,7 @@
-# Ajustes visuais, mobile, UX e branding do ZapDocfy
+# Ajustes visuais, mobile, UX e branding do ZapTify
 
 ## O que será alterado
-- Trocar o nome visível e os metadados do aplicativo para **ZapDocfy** em todas as telas.
+- Trocar o nome visível e os metadados do aplicativo para **ZapTify** em todas as telas.
 - Reorganizar o painel para exibir, no desktop e no celular, métricas de contratos, resumo de status e uma ação principal **+ Criar Contrato Rápido**.
 - Remover a opção duplicada **Novo Contrato** do menu lateral.
 - Ajustar cabeçalhos em telas pequenas, especialmente o botão **Voltar ao painel**, evitando quebras e desalinhamento.

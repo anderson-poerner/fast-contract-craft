@@ -1,5 +1,5 @@
-const KEY = "zapdocfy:meus-contratos";
-const SEEN_KEY = "zapdocfy:assinaturas-vistas";
+const KEY = "ZapTify:meus-contratos";
+const SEEN_KEY = "ZapTify:assinaturas-vistas";
 const LEGACY_KEY = "contratorapido:meus-contratos";
 const LEGACY_SEEN_KEY = "contratorapido:assinaturas-vistas";
 

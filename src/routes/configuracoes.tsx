@@ -15,10 +15,10 @@ import {
 export const Route = createFileRoute("/configuracoes")({
   head: () => ({
     meta: [
-      { title: "Configurações — ZapDocfy" },
-      { name: "description", content: "Configure os dados da sua empresa e a aparência do ZapDocfy." },
-      { property: "og:title", content: "Configurações — ZapDocfy" },
-      { property: "og:description", content: "Configure os dados da sua empresa e a aparência do ZapDocfy." },
+      { title: "Configurações — ZapTify" },
+      { name: "description", content: "Configure os dados da sua empresa e a aparência do ZapTify." },
+      { property: "og:title", content: "Configurações — ZapTify" },
+      { property: "og:description", content: "Configure os dados da sua empresa e a aparência do ZapTify." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },

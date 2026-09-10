@@ -1,6 +1,6 @@
 # Contrato Rápido
 
-ZapDocfy é um aplicativo SaaS focado em ajudar profissionais autônomos e microempresas a gerarem contratos de prestação de serviços de forma ultra-rápida.
+ZapTify é um aplicativo SaaS focado em ajudar profissionais autônomos e microempresas a gerarem contratos de prestação de serviços de forma ultra-rápida.
 
 O aplicativo deve ter um design moderno, limpo e profissional (use tons de azul escuro, cinza espacial e branco, com estilo minimalista de SaaS de alta tecnologia).
 
@@ -54,7 +54,7 @@ Gere este layout completo e funcional utilizando componentes modernos.
 
 This project was built with [Lovable](https://lovable.dev).
 
-**Aplicativo:** ZapDocfy
+**Aplicativo:** ZapTify
 
 ## Build with Lovable
 

@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Atualizar todo o branding para ZapDocfy.
+- [ ] Atualizar todo o branding para ZapTify.
 - [ ] Criar resumo completo e ação principal no dashboard em desktop e mobile.
 - [ ] Padronizar badges de status dos contratos.
 - [ ] Mover dados da empresa para Configurações e preencher novos contratos automaticamente.

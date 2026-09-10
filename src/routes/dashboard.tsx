@@ -33,9 +33,9 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Painel — ZapDocfy" },
+      { title: "Painel — ZapTify" },
       { name: "description", content: "Gere contratos profissionais em tempo real." },
-      { property: "og:title", content: "Painel — ZapDocfy" },
+      { property: "og:title", content: "Painel — ZapTify" },
       { property: "og:description", content: "Gere e acompanhe contratos profissionais em tempo real." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -177,7 +177,7 @@ function Dashboard() {
           <div className="h-8 w-8 rounded-md bg-brand grid place-items-center">
             <FileSignature className="h-4 w-4 text-brand-foreground" />
           </div>
-          <span className="font-semibold">ZapDocfy</span>
+          <span className="font-semibold">ZapTify</span>
         </div>
         <nav className="flex-1 p-3 space-y-1 text-sm">
           <SidebarItem icon={<LayoutDashboard className="h-4 w-4" />} label="Painel" active />

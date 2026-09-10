@@ -1,6 +1,6 @@
-export const COMPANY_STORAGE_KEY = "zapdocfy:minha-empresa";
+export const COMPANY_STORAGE_KEY = "ZapTify:minha-empresa";
 export const LEGACY_COMPANY_STORAGE_KEY = "contratorapido:minha-empresa";
-export const THEME_STORAGE_KEY = "zapdocfy:tema";
+export const THEME_STORAGE_KEY = "ZapTify:tema";
 
 export interface CompanyProfile {
   nome: string;

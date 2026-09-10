@@ -77,20 +77,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ZapDocfy — Contratos rápidos e profissionais" },
+      { title: "ZapTify — Contratos rápidos e profissionais" },
       {
         name: "description",
         content:
           "Plataforma SaaS para profissionais autônomos e microempresas gerarem contratos de prestação de serviços profissionais em minutos.",
       },
-      { property: "og:title", content: "ZapDocfy — Contratos rápidos e profissionais" },
+      { property: "og:title", content: "ZapTify — Contratos rápidos e profissionais" },
       {
         property: "og:description",
         content: "Plataforma SaaS para profissionais autônomos e microempresas gerarem contratos de prestação de serviços profissionais em minutos.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "ZapDocfy — Contratos rápidos e profissionais" },
+      { name: "twitter:title", content: "ZapTify — Contratos rápidos e profissionais" },
       { name: "twitter:description", content: "Plataforma SaaS para profissionais autônomos e microempresas gerarem contratos de prestação de serviços profissionais em minutos." },
     ],
     links: [
@@ -125,7 +125,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
-    const dark = localStorage.getItem("zapdocfy:tema") === "dark";
+    const dark = localStorage.getItem("ZapTify:tema") === "dark";
     document.documentElement.classList.toggle("dark", dark);
   }, []);
 
