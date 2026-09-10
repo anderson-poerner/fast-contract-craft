@@ -5,17 +5,19 @@ import { FileSignature, ArrowRight } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ContratoRápido — Gere contratos em segundos" },
+      { title: "ZapDocfy — Contratos rápidos e profissionais" },
       {
         name: "description",
         content:
           "Plataforma SaaS para profissionais autônomos e microempresas gerarem contratos de prestação de serviços profissionais em minutos.",
       },
-      { property: "og:title", content: "ContratoRápido — Gere contratos em segundos" },
+      { property: "og:title", content: "ZapDocfy — Contratos rápidos e profissionais" },
       {
         property: "og:description",
         content: "Plataforma SaaS para profissionais autônomos e microempresas gerarem contratos de prestação de serviços profissionais em minutos.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Login,
@@ -46,7 +48,7 @@ function Login() {
           <div className="h-9 w-9 rounded-lg bg-brand grid place-items-center">
             <FileSignature className="h-5 w-5 text-brand-foreground" />
           </div>
-          ContratoRápido
+          ZapDocfy
         </div>
         <div className="relative space-y-6 max-w-md">
           <h1 className="text-4xl font-bold tracking-tight leading-tight">
@@ -63,7 +65,7 @@ function Login() {
           </ul>
         </div>
         <p className="relative text-xs text-sidebar-foreground/50">
-          © {new Date().getFullYear()} ContratoRápido
+          © {new Date().getFullYear()} ZapDocfy
         </p>
       </div>
 
@@ -74,7 +76,7 @@ function Login() {
             <div className="h-9 w-9 rounded-lg bg-brand grid place-items-center">
               <FileSignature className="h-5 w-5 text-brand-foreground" />
             </div>
-            ContratoRápido
+            ZapDocfy
           </div>
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold tracking-tight">Bem-vindo de volta</h2>

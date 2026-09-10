@@ -18,6 +18,9 @@ export interface FormState {
   contratanteDoc: string;
   contratadoNome: string;
   contratadoDoc: string;
+  contratadoEndereco?: string;
+  contratadoEmail?: string;
+  contratadoTelefone?: string;
   descricao: string;
   valor: string;
   pagamento: string;
@@ -31,6 +34,9 @@ export const initialForm: FormState = {
   contratanteDoc: "",
   contratadoNome: "",
   contratadoDoc: "",
+  contratadoEndereco: "",
+  contratadoEmail: "",
+  contratadoTelefone: "",
   descricao: "",
   valor: "",
   pagamento: "",
@@ -49,7 +55,8 @@ export function buildContract(
   const title = `CONTRATO DE ${CONTRACT_LABELS[form.tipo].toUpperCase()}`;
 
   const contratante = `${ph(form.contratanteNome, "NOME DO CONTRATANTE")}, inscrito(a) no CPF/CNPJ sob nº ${ph(form.contratanteDoc, "CPF/CNPJ DO CONTRATANTE")}, doravante denominado(a) CONTRATANTE`;
-  const contratado = `${ph(form.contratadoNome, "NOME DO CONTRATADO")}, inscrito(a) no CPF/CNPJ sob nº ${ph(form.contratadoDoc, "CPF/CNPJ DO CONTRATADO")}, doravante denominado(a) CONTRATADO`;
+  const contatoContratado = [form.contratadoEndereco && `com endereço em ${form.contratadoEndereco}`, form.contratadoEmail && `e-mail ${form.contratadoEmail}`, form.contratadoTelefone && `telefone ${form.contratadoTelefone}`].filter(Boolean).join(", ");
+  const contratado = `${ph(form.contratadoNome, "NOME DO CONTRATADO")}, inscrito(a) no CPF/CNPJ sob nº ${ph(form.contratadoDoc, "CPF/CNPJ DO CONTRATADO")}${contatoContratado ? `, ${contatoContratado}` : ""}, doravante denominado(a) CONTRATADO`;
 
   const abertura = `Pelo presente instrumento particular, de um lado ${contratante}, e de outro lado ${contratado}, têm entre si justo e contratado o presente Contrato de ${CONTRACT_LABELS[form.tipo]}, que se regerá pelas cláusulas e condições a seguir:`;
 

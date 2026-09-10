@@ -1,5 +1,7 @@
-const KEY = "contratorapido:meus-contratos";
-const SEEN_KEY = "contratorapido:assinaturas-vistas";
+const KEY = "zapdocfy:meus-contratos";
+const SEEN_KEY = "zapdocfy:assinaturas-vistas";
+const LEGACY_KEY = "contratorapido:meus-contratos";
+const LEGACY_SEEN_KEY = "contratorapido:assinaturas-vistas";
 
 export interface LocalContract {
   id: string;
@@ -11,7 +13,7 @@ export interface LocalContract {
 export function listLocalContracts(): LocalContract[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(KEY) ?? localStorage.getItem(LEGACY_KEY);
     return raw ? (JSON.parse(raw) as LocalContract[]) : [];
   } catch {
     return [];
@@ -30,7 +32,7 @@ export function removeLocalContract(id: string) {
 export function getSeenSignatures(): string[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(SEEN_KEY);
+    const raw = localStorage.getItem(SEEN_KEY) ?? localStorage.getItem(LEGACY_SEEN_KEY);
     return raw ? (JSON.parse(raw) as string[]) : [];
   } catch {
     return [];

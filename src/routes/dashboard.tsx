@@ -14,8 +14,9 @@ import {
   Save,
   Copy,
   Check,
-  Building2,
-  Pencil,
+  Clock3,
+  CheckCircle2,
+  Plus,
 } from "lucide-react";
 import {
   CONTRACT_LABELS,
@@ -26,12 +27,18 @@ import {
 } from "@/lib/contract-builder";
 import { createContract, getContractsByIds } from "@/lib/contracts.functions";
 import { listLocalContracts, saveLocalContract, getSeenSignatures } from "@/lib/my-contracts";
+import { loadCompanyProfile } from "@/lib/app-preferences";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Painel — ContratoRápido" },
+      { title: "Painel — ZapDocfy" },
       { name: "description", content: "Gere contratos profissionais em tempo real." },
+      { property: "og:title", content: "Painel — ZapDocfy" },
+      { property: "og:description", content: "Gere e acompanhe contratos profissionais em tempo real." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -44,6 +51,7 @@ function Dashboard() {
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
   const [novasAssinaturas, setNovasAssinaturas] = useState(0);
+  const [summary, setSummary] = useState({ total: 0, pending: 0, signed: 0 });
   const create = useServerFn(createContract);
   const fetchContracts = useServerFn(getContractsByIds);
   const contract = useMemo(() => buildContract(form), [form]);
@@ -53,12 +61,16 @@ function Dashboard() {
     let active = true;
     const check = async () => {
       const ids = listLocalContracts().map((c) => c.id);
-      if (ids.length === 0) return;
+      if (ids.length === 0) {
+        setSummary({ total: 0, pending: 0, signed: 0 });
+        return;
+      }
       try {
         const rows = (await fetchContracts({ data: { ids } })) as { id: string; status: string }[];
         if (!active) return;
         const seen = getSeenSignatures();
         setNovasAssinaturas(rows.filter((r) => r.status === "signed" && !seen.includes(r.id)).length);
+        setSummary({ total: rows.length, pending: rows.filter((r) => r.status !== "signed").length, signed: rows.filter((r) => r.status === "signed").length });
       } catch {
         /* silencioso */
       }
@@ -81,35 +93,10 @@ function Dashboard() {
     update(k, v);
   };
 
-  // "Minha Empresa" — dados do contratado salvos no navegador
-  const [empresa, setEmpresa] = useState({ nome: "", doc: "" });
-  const [editingEmpresa, setEditingEmpresa] = useState(false);
-  const [empresaSalva, setEmpresaSalva] = useState(false);
-
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("contratorapido:minha-empresa");
-      if (raw) {
-        const parsed = JSON.parse(raw) as { nome?: string; doc?: string };
-        const dados = { nome: parsed.nome ?? "", doc: parsed.doc ?? "" };
-        setEmpresa(dados);
-        setForm((f) => ({ ...f, contratadoNome: dados.nome, contratadoDoc: dados.doc }));
-      } else {
-        setEditingEmpresa(true);
-      }
-    } catch {
-      setEditingEmpresa(true);
-    }
+    const empresa = loadCompanyProfile();
+    setForm((current) => ({ ...current, contratadoNome: empresa.nome, contratadoDoc: empresa.doc, contratadoEndereco: empresa.endereco, contratadoEmail: empresa.email, contratadoTelefone: empresa.telefone }));
   }, []);
-
-  const salvarEmpresa = () => {
-    localStorage.setItem("contratorapido:minha-empresa", JSON.stringify(empresa));
-    setForm((f) => ({ ...f, contratadoNome: empresa.nome, contratadoDoc: empresa.doc }));
-    setSavedId(null);
-    setEditingEmpresa(false);
-    setEmpresaSalva(true);
-    setTimeout(() => setEmpresaSalva(false), 2000);
-  };
 
   const shareUrl = savedId ? `${typeof window !== "undefined" ? window.location.origin : ""}/view/contract/${savedId}` : "";
 
@@ -190,18 +177,17 @@ function Dashboard() {
           <div className="h-8 w-8 rounded-md bg-brand grid place-items-center">
             <FileSignature className="h-4 w-4 text-brand-foreground" />
           </div>
-          <span className="font-semibold">ContratoRápido</span>
+          <span className="font-semibold">ZapDocfy</span>
         </div>
         <nav className="flex-1 p-3 space-y-1 text-sm">
           <SidebarItem icon={<LayoutDashboard className="h-4 w-4" />} label="Painel" active />
-          <SidebarItem icon={<FilePlus2 className="h-4 w-4" />} label="Novo Contrato" />
           <SidebarItem
             icon={<FileText className="h-4 w-4" />}
             label="Meus Contratos"
             to="/contratos"
             badge={novasAssinaturas}
           />
-          <SidebarItem icon={<Settings className="h-4 w-4" />} label="Configurações" />
+          <SidebarItem icon={<Settings className="h-4 w-4" />} label="Configurações" to="/configuracoes" />
         </nav>
 
         <div className="p-3 border-t border-sidebar-border">
@@ -221,31 +207,32 @@ function Dashboard() {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 border-b bg-card px-6 flex items-center justify-between gap-4">
-          <div>
-            <h1 className="text-lg font-semibold">Novo Contrato</h1>
-            <p className="text-xs text-muted-foreground">
-              Preencha os dados e visualize o contrato em tempo real.
-            </p>
+        <header className="border-b bg-card px-4 py-3 sm:px-6">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+            <div className="min-w-0">
+              <h1 className="truncate text-base font-semibold sm:text-lg">Painel</h1>
+              <p className="hidden text-xs text-muted-foreground sm:block">Acompanhe seus documentos e crie um novo contrato.</p>
+            </div>
+            <Button asChild size="sm" className="shrink-0 px-2.5 sm:px-3"><a href="#criar-contrato"><Plus /> <span className="whitespace-nowrap">Criar Contrato Rápido</span></a></Button>
           </div>
-          <Link
-            to="/contratos"
-            className={`inline-flex items-center gap-2 h-9 px-3 rounded-md border text-xs font-medium transition ${
-              novasAssinaturas
-                ? "border-green-600/40 bg-green-50 text-green-700 hover:bg-green-100"
-                : "bg-card hover:bg-muted"
-            }`}
-          >
-            <FileText className="h-3.5 w-3.5" />
-            {novasAssinaturas
-              ? `${novasAssinaturas} ${novasAssinaturas === 1 ? "contrato assinado" : "contratos assinados"}`
-              : "Meus Contratos"}
-          </Link>
         </header>
 
+        <section className="grid grid-cols-2 gap-3 px-4 pt-4 sm:grid-cols-3 sm:px-6 sm:pt-6">
+          <MetricCard label="Total de contratos" value={summary.total} icon={<FileText />} />
+          <MetricCard label="Pendente no WhatsApp" value={summary.pending} icon={<Clock3 />} tone="pending" />
+          <MetricCard label="Assinados" value={summary.signed} icon={<CheckCircle2 />} tone="signed" />
+        </section>
 
-        <div className="flex-1 grid lg:grid-cols-2 gap-6 p-6 overflow-auto">
-          <section className="bg-card border rounded-xl p-6 space-y-5 h-fit">
+        <div className="px-4 pt-3 sm:px-6">
+          <Link to="/contratos" className="inline-flex items-center gap-2 text-sm font-medium text-brand hover:underline">
+            <FileText className="h-4 w-4" />
+            {novasAssinaturas ? `${novasAssinaturas} novo${novasAssinaturas > 1 ? "s" : ""} aceite${novasAssinaturas > 1 ? "s" : ""}` : "Ver Meus Contratos"}
+          </Link>
+        </div>
+
+
+        <div className="flex-1 grid gap-6 overflow-auto p-4 sm:p-6 lg:grid-cols-2">
+          <section id="criar-contrato" className="h-fit space-y-5 rounded-lg border bg-card p-4 sm:p-6">
             <div className="space-y-1.5">
               <label className="text-sm font-medium">Tipo de Contrato</label>
               <select
@@ -266,64 +253,6 @@ function Dashboard() {
               <Field label="Nome / Razão Social" value={form.contratanteNome} onChange={(v) => updateAndReset("contratanteNome", v)} placeholder="Ex: Empresa XYZ LTDA" />
               <Field label="CPF / CNPJ" value={form.contratanteDoc} onChange={(v) => updateAndReset("contratanteDoc", v)} placeholder="000.000.000-00" />
             </FieldGroup>
-
-            <div className="rounded-lg border bg-muted/40 p-4 space-y-3">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-2">
-                  <Building2 className="h-3.5 w-3.5" />
-                  Minha Empresa
-                </p>
-                {!editingEmpresa && (
-                  <button
-                    onClick={() => setEditingEmpresa(true)}
-                    className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border bg-card hover:bg-muted transition text-xs font-medium"
-                  >
-                    <Pencil className="h-3.5 w-3.5" />
-                    Alterar
-                  </button>
-                )}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Estes dados identificam você como CONTRATADO em todos os contratos gerados.
-              </p>
-
-              {editingEmpresa ? (
-                <>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <Field
-                      label="Nome / Razão Social"
-                      value={empresa.nome}
-                      onChange={(v) => setEmpresa((e) => ({ ...e, nome: v }))}
-                      placeholder="Seu nome ou empresa"
-                    />
-                    <Field
-                      label="CPF / CNPJ"
-                      value={empresa.doc}
-                      onChange={(v) => setEmpresa((e) => ({ ...e, doc: v }))}
-                      placeholder="000.000.000-00"
-                    />
-                  </div>
-                  <button
-                    onClick={salvarEmpresa}
-                    className="inline-flex items-center gap-2 h-9 px-3 rounded-md bg-brand text-brand-foreground hover:opacity-90 transition text-xs font-medium"
-                  >
-                    <Save className="h-3.5 w-3.5" />
-                    Salvar dados
-                  </button>
-                </>
-              ) : (
-                <div className="text-sm">
-                  <p className="font-medium">{empresa.nome || "—"}</p>
-                  <p className="text-muted-foreground text-xs">{empresa.doc || "CPF/CNPJ não informado"}</p>
-                </div>
-              )}
-
-              {empresaSalva && (
-                <p className="text-xs text-green-600 inline-flex items-center gap-1.5">
-                  <Check className="h-3.5 w-3.5" /> Dados salvos!
-                </p>
-              )}
-            </div>
 
             <div className="space-y-1.5">
               <label className="text-sm font-medium">Descrição do serviço</label>
