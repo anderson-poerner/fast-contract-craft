@@ -29,7 +29,7 @@ import { createContract, getContractsByIds } from "@/lib/contracts.functions";
 import { listLocalContracts, saveLocalContract, getSeenSignatures } from "@/lib/my-contracts";
 import { loadCompanyProfile } from "@/lib/app-preferences";
 import { Button } from "@/components/ui/button";
-
+import { MetricCard } from "@/components/MetricCard";
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
